@@ -1,0 +1,17 @@
+### index handler
+
+GET http://localhost:8081/
+
+### update handler
+
+PATCH http://localhost:8081/
+Content-Type: application/json
+
+{
+  "age": 20,
+  "skills": [
+    "rust",
+    "go",
+    "typescript"
+  ]
+}
