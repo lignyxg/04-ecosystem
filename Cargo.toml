@@ -11,3 +11,4 @@ chrono = "0.4.38"
 [dev-dependencies]
 anyhow = "1.0.86"
 derive_builder = "0.20.0"
+derive_more = "0.99.18"
