@@ -6,6 +6,11 @@ use axum::routing::{get, patch};
 use axum::{Json, Router};
 use derive_builder::Builder;
 use derive_more::{From, Into};
+use opentelemetry::KeyValue;
+use opentelemetry_otlp::WithExportConfig;
+use opentelemetry_sdk::runtime::Tokio;
+use opentelemetry_sdk::trace::{RandomIdGenerator, Tracer};
+use opentelemetry_sdk::{trace, Resource};
 use serde::{Deserialize, Serialize};
 use tokio::net::TcpListener;
 use tracing::metadata::LevelFilter;
@@ -41,7 +46,13 @@ async fn main() -> anyhow::Result<()> {
         .pretty()
         .with_filter(LevelFilter::INFO);
 
-    tracing_subscriber::registry().with(console).init();
+    let tracer = init_tracer()?;
+    let open_telemetry = tracing_opentelemetry::layer().with_tracer(tracer);
+
+    tracing_subscriber::registry()
+        .with(console)
+        .with(open_telemetry)
+        .init();
 
     let addr = "0.0.0.0:8081";
     let listener = TcpListener::bind(addr).await?;
@@ -84,4 +95,24 @@ async fn update_handler(
         gard.skills = skills;
     }
     gard.clone().into()
+}
+
+fn init_tracer() -> anyhow::Result<Tracer> {
+    let tracer = opentelemetry_otlp::new_pipeline()
+        .tracing()
+        .with_exporter(
+            opentelemetry_otlp::new_exporter()
+                .tonic()
+                .with_endpoint("http://localhost:4317"),
+        )
+        .with_trace_config(
+            trace::config()
+                .with_id_generator(RandomIdGenerator::default())
+                .with_resource(Resource::new(vec![KeyValue::new(
+                    "service.name",
+                    "axum_serde",
+                )])),
+        )
+        .install_batch(Tokio)?;
+    Ok(tracer)
 }
