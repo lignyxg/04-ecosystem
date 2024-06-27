@@ -8,18 +8,30 @@ edition = "2021"
 [dependencies]
 axum = "0.7.5"
 chrono = { version = "0.4.38", features = ["serde"] }
-tokio = { version = "1.38.0", features = ["rt", "rt-multi-thread", "macros", "net"] }
+
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 serde = { version = "1.0.203", features = ["derive"] }
 serde_json = "1.0.117"
+log = "0.4.21"
+tokio = { version = "1.0.0", features = ["rt", "rt-multi-thread", "macros"] }
+
+
+
 
 [dev-dependencies]
 anyhow = "1.0.86"
+dashmap = "5.5.3"
 derive_builder = "0.20.0"
 derive_more = "0.99.18"
 opentelemetry = "0.23.0"
 opentelemetry-otlp = { version = "0.16.0", features = ["tonic"] }
 opentelemetry_sdk = { version = "0.23.0", features = ["rt-tokio"] }
 tracing-opentelemetry = "0.24.0"
-
+sqlx = { version = "0.7.4", features = ["postgres", "runtime-tokio", "tls-rustls"] }
+nanoid = "0.4.0"
+tokio-util = { version = "0.7.11", features = ["codec"] }
+futures-util = { version = "0.3.30", features = ["sink"] }
+futures = "0.3.30"
+tokio = { version = "1.38.0", features = ["rt", "rt-multi-thread", "macros", "net", "sync"] }
+tokio-stream = "0.1.15"
