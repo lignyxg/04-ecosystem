@@ -15,3 +15,14 @@ Content-Type: application/json
     "typescript"
   ]
 }
+
+### url shorten
+POST http://localhost:9898/
+Content-Type: application/json
+
+{
+  "url": "https://docs.rs/axum/latest/axum/response/trait.IntoResponse.html"
+}
+
+### url redirect
+GET http://localhost:9898/7Yh_zJ
